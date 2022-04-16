@@ -9,7 +9,7 @@ public class Program {
 		boolean PrimeStatus = true;
 		int	steps = 0;
 		if (number < 2) {
-			System.out.println("Illegal Argument");
+			System.err.println("Illegal Argument");
 			status = -1;
 		}
 		else if (number == 2){

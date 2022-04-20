@@ -25,7 +25,7 @@ public class TransactionsLinkedList implements TransactionsList{
 
     @Override
     public Transaction deleteById(UUID id) {
-        List tmp = start.next;
+        List tmp = start.next();
 
         while (tmp != end) {
             if (tmp.getTransaction().getIdentifier().equals(id)) {
@@ -33,7 +33,7 @@ public class TransactionsLinkedList implements TransactionsList{
                 count--;
                 return tmp.getTransaction();
             }
-            tmp = tmp.next;
+            tmp = tmp.next();
         }
         throw new ThrowableClass("Transaction not found!");
     }
@@ -42,10 +42,10 @@ public class TransactionsLinkedList implements TransactionsList{
     public Transaction[] toArray() {
         Transaction[] transactions = new Transaction[count];
 
-        List tmp = start.next;
+        List tmp = start.next();
         for (int i = 0; i < count; i++) {
             transactions[i] = tmp.getTransaction();
-            tmp = tmp.next;
+            tmp = tmp.next();
         }
         return transactions;
     }
@@ -72,6 +72,6 @@ public class TransactionsLinkedList implements TransactionsList{
             next = end;
         }
         public Transaction getTransaction() { return transaction;}
-        public List next() { return next;}
+		public List next() {return next;}
     }
 }

@@ -32,6 +32,14 @@ public class User {
         this.name = name;
     }
 
+	public void setList(TransactionsList list) {
+        this.list = list;
+    }
+
+	public TransactionsList getList() {
+        return list;
+    }
+
     public void setTransactionsList(TransactionsList list) { this.list = list;}
 
     @Override

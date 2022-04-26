@@ -31,12 +31,3 @@ public class Program {
         logic.convert(white, black, Program.class.getResource("/resources/it.bmp"));
     }
 }
-
-//    public static void run(){
-//        Logic logic = new Logic();
-//        if (white == null || black == null) {
-//            System.out.println("Error! Bad Arguments!");
-//            System.exit(-1);
-//        }
-//        logic.convert(white, black, Program.class.getResource("/resources/it.bmp"));
-//    }

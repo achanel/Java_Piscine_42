@@ -1,24 +1,49 @@
-DROP SCHEMA IF EXISTS chat CASCADE;
+DROP TABLE IF EXISTS messages;
+DROP TABLE IF EXISTS users_chatrooms;
+DROP TABLE IF EXISTS chatrooms;
+DROP TABLE IF EXISTS users;
 
-CREATE SCHEMA IF NOT EXISTS chat;
-
-
-CREATE TABLE IF NOT EXISTS chat.users (
-                                          id SERIAL PRIMARY KEY,
-                                          login text UNIQUE NOT NULL,
-                                          password text NOT NULL
+CREATE TABLE users
+(
+    id          BIGSERIAL PRIMARY KEY,
+    login       VARCHAR NOT NULL,
+    password    VARCHAR NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS chat.rooms (
-                                          id SERIAL PRIMARY KEY,
-                                          name TEXT UNIQUE NOT NULL,
-                                          owner INTEGER REFERENCES chat.users(id) NOT NULL
-    );
+CREATE TABLE chatrooms
+(
+    id          BIGSERIAL PRIMARY KEY,
+    name        VARCHAR NOT NULL,
+    owner_id    BIGINT  NOT NULL
+);
 
-CREATE TABLE IF NOT EXISTS chat.messages (
-                                             id SERIAL PRIMARY KEY,
-                                             author INTEGER REFERENCES chat.users(id) NOT NULL,
-    room INTEGER REFERENCES chat.rooms(id) NOT NULL,
-    text TEXT NOT NULL,
-    timestamp TIMESTAMP NOT NULL
-    );
+CREATE TABLE users_chatrooms
+(
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    chatroom_id BIGINT NOT NULL
+);
+
+CREATE TABLE messages
+(
+    id        BIGSERIAL PRIMARY KEY,
+    author    BIGINT    NOT NULL,
+    room      BIGINT    NOT NULL,
+    text      TEXT,
+    date_time TIMESTAMP
+);
+
+ALTER TABLE chatrooms
+    ADD CONSTRAINT fk_owner_id FOREIGN KEY (owner_id) REFERENCES users (id);
+
+ALTER TABLE messages
+    ADD CONSTRAINT fk_author FOREIGN KEY (author) REFERENCES users (id);
+
+ALTER TABLE messages
+    ADD CONSTRAINT fk_room FOREIGN KEY (room) REFERENCES chatrooms (id);
+
+ALTER TABLE users_chatrooms
+    ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (id);
+
+ALTER TABLE users_chatrooms
+    ADD CONSTRAINT fk_chatroom_id FOREIGN KEY (chatroom_id) REFERENCES chatrooms (id);

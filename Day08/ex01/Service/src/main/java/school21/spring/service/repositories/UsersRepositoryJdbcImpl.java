@@ -27,7 +27,7 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
 
 
     @Override
-    public Optional<User> findById(Long id) {
+    public User findById(Long id) {
         try (Connection connection = ds.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_FIND_BY_ID)) {
             statement.setLong(1, id);
@@ -39,13 +39,11 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
                 findUser = new User(userId, userEmail);
             }
             resultSet.close();
-            if (findUser != null) {
-                return Optional.of(findUser);
-            }
+            return findUser;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return Optional.empty();
+        return null;
     }
 
     @Override
@@ -95,10 +93,8 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
     public void delete(Long id) {
         try (Connection connection = ds.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_DELETE)) {
-            if (findById(id).isPresent()) {
-                statement.setLong(1, id);
-                statement.execute();
-            }
+            statement.setLong(1, id);
+            statement.execute();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

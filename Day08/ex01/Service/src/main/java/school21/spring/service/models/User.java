@@ -6,11 +6,12 @@ public class User {
     Long id;
     String email;
 
-
     public User(Long id, String email) {
         this.id = id;
         this.email = email;
     }
+
+     public User() {}
 
     public Long getId() {
         return id;

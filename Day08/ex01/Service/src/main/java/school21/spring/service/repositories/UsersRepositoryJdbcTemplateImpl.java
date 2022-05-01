@@ -1,16 +1,17 @@
 package school21.spring.service.repositories;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.core.RowMapper;
 import school21.spring.service.models.User;
 
-import java.io.IOException;
+import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
 
-public class UsersRepositoryJdbcTemplateImpl implements UsersRepository {
-    public JdbcTemplate template;
+public class UsersRepositoryJdbcTemplateImpl extends JdbcTemplate implements UsersRepository {
+    public DataSource template;
 
     private final String SQL_FIND_BY_ID = "SELECT * FROM users WHERE id=?;";
     private final String SQL_SAVE = "INSERT INTO users (email) VALUES(?);";
@@ -19,57 +20,51 @@ public class UsersRepositoryJdbcTemplateImpl implements UsersRepository {
     private final String SQL_FIND_ALL = "SELECT * FROM users;";
     private final String SQL_FIND_BY_EMAIL = "SELECT * FROM users WHERE id=?;";
 
-    public UsersRepositoryJdbcTemplateImpl(JDBCGenerator dataSource) {
-        this.template = new JdbcTemplate(dataSource.manager);
+    public UsersRepositoryJdbcTemplateImpl(DataSource dataSource) {
+        super(dataSource);
+        this.template = dataSource;
     }
 
     @Override
-    public Optional<User> findById(Long id) {
-        return Optional.ofNullable(template.query(SQL_FIND_BY_ID, new Object[]{id}, (rs, rowNum) -> new User(rs.getLong(1), rs.getString(2)))
-                .stream().findAny().orElse(null));
+    public User findById(Long id) {
+        return query(SQL_FIND_BY_ID, new UserMapper(), new Object[]{id})
+                .stream().findAny().orElse(null);
     }
 
     @Override
     public List<User> findAll() {
-        return template.query(SQL_FIND_ALL, (rs, rowNum) -> new User(rs.getLong(1), rs.getString(2)));
+        return query(SQL_FIND_ALL, new UserMapper());
     }
 
     @Override
     public void save(User entity) {
-        template.update(SQL_SAVE, entity.getEmail());
+        update(SQL_SAVE, entity.getEmail());
     }
 
     @Override
     public void update(User entity) {
-        template.update(SQL_UPDATE, entity.getEmail(), entity.getId());
+        update(SQL_UPDATE, entity.getEmail(), entity.getId());
     }
 
     @Override
     public void delete(Long id) {
-        template.update(SQL_DELETE, id);
+        update(SQL_DELETE, id);
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return Optional.ofNullable(template.query(SQL_FIND_BY_EMAIL, new Object[]{email}, (rs, rowNum) -> new User(rs.getLong(1), rs.getString(2)))
-                .stream().findAny().orElse(null));
+        User user = query(SQL_FIND_BY_EMAIL, new UserMapper(), new Object[]{email})
+                .stream().findAny().orElse(null);
+        return Optional.of(user);
     }
 
-    public static class JDBCGenerator {
-        DriverManagerDataSource manager;
-
-        public JDBCGenerator() {
-            manager = new DriverManagerDataSource();
-            Properties properties = new Properties();
-            try {
-                properties.load(UsersRepositoryJdbcTemplateImpl.class.getClassLoader().getResourceAsStream("db.properties"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            manager.setDriverClassName(properties.getProperty("db.driver.name"));
-            manager.setUrl(properties.getProperty("db.url"));
-            manager.setUsername(properties.getProperty("db.user"));
-            manager.setPassword(properties.getProperty("db.password"));
+    public class UserMapper implements RowMapper<User> {
+        @Override
+        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+            User user = new User();
+            user.setId(rs.getLong("id"));
+            user.setEmail(rs.getString("email"));
+            return user;
         }
     }
 }

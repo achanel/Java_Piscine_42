@@ -19,7 +19,7 @@ public class Program {
             weekNum++;
         }
         for (int i = 1; i < weekNum; i++) {
-            System.out.println("Week " + i + " ");
+            System.out.print("Week " + i + " ");
             gradeLength(pullNum(gradeArr, i));
         }
     }

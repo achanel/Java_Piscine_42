@@ -6,26 +6,25 @@ public class Program {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int number = scanner.nextInt();
-        int	coffie = 0;
+        int	coffee = 0;
 
         while (number != 42) {
             if (number < 2) {
                 System.err.println("Error: Bad Argument, try again");
             }
             else if (isPrime(sumOfDigits(number))) {
-                coffie++;
+                coffee++;
             }
             number = scanner.nextInt();
         }
-        System.out.println("Count of coffee-request – " + coffie);
+        System.out.println("Count of coffee-request – " + coffee);
     }
 
     public static boolean isPrime(int number) {
-        int	status = 0;
         boolean PrimeStatus = true;
         int l = 0;
         int r = number;
-        int m = (l + r) / 2;
+        int m;
         int t = number;
 
         for(;;) {

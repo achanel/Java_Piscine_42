@@ -14,11 +14,10 @@ import java.util.ArrayList;
 public class Program {
     public static void main(String[] args) {
         try {
-            HikariConfig hikariConfig = new HikariConfig();
-            hikariConfig.setJdbcUrl("jdbc:postgresql://localhost:5555/postgres");
-            hikariConfig.setUsername("postgres");
-            hikariConfig.setPassword("postgres");
-            HikariDataSource hikariDataSource = new HikariDataSource(hikariConfig);
+            HikariDataSource hikariDataSource = new HikariDataSource();
+            hikariDataSource.setJdbcUrl("jdbc:postgresql://localhost:5432/postgres");
+            hikariDataSource.setUsername("postgres");
+            hikariDataSource.setPassword("postgres");
             MessagesRepository messagesRepository = new MessagesRepositoryJdbcImpl(hikariDataSource);
 
             {

@@ -14,12 +14,16 @@ public class Program {
         System.out.print("Enter a message ID\n-> ");
         Scanner scanner = new Scanner(System.in);
         try {
-            Long l = scanner.nextLong();
-            HikariConfig hikariConfig = new HikariConfig();
-            hikariConfig.setJdbcUrl("jdbc:postgresql://localhost:5555/postgres");
-            hikariConfig.setUsername("postgres");
-            hikariConfig.setPassword("postgres");
-            HikariDataSource hikariDataSource = new HikariDataSource(hikariConfig);
+            Long l;
+            while (!scanner.hasNextLong()){
+                System.out.println("Error, Enter a message ID:");
+                scanner.next();
+            }
+            l = scanner.nextLong();
+            HikariDataSource hikariDataSource = new HikariDataSource();
+            hikariDataSource.setJdbcUrl("jdbc:postgresql://localhost:5432/postgres");
+            hikariDataSource.setUsername("postgres");
+            hikariDataSource.setPassword("postgres");
             MessagesRepository messagesRepository = new MessagesRepositoryJdbcImpl(hikariDataSource);
             Optional<Message> result = messagesRepository.findById(l);
             if (result.isPresent()) {

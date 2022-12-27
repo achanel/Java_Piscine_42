@@ -6,25 +6,10 @@ import edu.school21.chat.models.User;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class MessagesRepositoryJdbcImpl implements MessagesRepository{
     private final DataSource dataSource;
-
-    private final String SQL_FIND_MESSAGE_BY_ID = "SELECT \n" +
-            "messages.id AS message_id,\n" +
-            "users.id AS user_id,\n" +
-            "users.login AS user_login,\n" +
-            "users.password AS user_password,\n" +
-            "chatrooms.id AS chatroom_id,\n" +
-            "chatrooms.name AS chatroom_name,\n" +
-            "messages.text AS message_text,\n" +
-            "messages.date_time AS message_date_time\n" +
-            "FROM messages \n" +
-            "LEFT JOIN users ON users.id = messages.author \n" +
-            "LEFT JOIN chatrooms ON chatrooms.id = messages.room\n" +
-            "WHERE messages.id = ? ;";
 
     public MessagesRepositoryJdbcImpl(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -32,35 +17,48 @@ public class MessagesRepositoryJdbcImpl implements MessagesRepository{
 
     @Override
     public Optional<Message> findById(Long id){
+        String SQL_FIND_MESSAGE_BY_ID = "SELECT * FROM chat.messages WHERE id = ?;";
         try (Connection connection = dataSource.getConnection();
-        PreparedStatement statement = connection.prepareStatement(SQL_FIND_MESSAGE_BY_ID)) {
+             PreparedStatement statement = connection.prepareStatement(SQL_FIND_MESSAGE_BY_ID)) {
             statement.setLong(1, id);
-            Message findMessage = null;
             ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                Long userId = resultSet.getLong(("user_id"));
-                String userLogin = resultSet.getString("user_login");
-                String userPassword = resultSet.getString("user_password");
-                User findUser = new User(userId, userLogin, userPassword, null, null);
-                Long chatroomId = resultSet.getLong("chatroom_id");
-                String chatroomName = resultSet.getString("chatroom_name");
-                Chatroom findChatroom = new Chatroom(chatroomId, chatroomName, null, null);
-                Long message_id = resultSet.getLong("message_id");
-                String messageText = resultSet.getString("message_text");
-                LocalDateTime messageDateTime;
-                Object findMessageDateTime = resultSet.getObject("message_date_time");
-                if (findMessageDateTime == null)
-                    messageDateTime = null;
-                else
-                    messageDateTime = resultSet.getTimestamp("message_date_time").toLocalDateTime();
-                findMessage = new Message(message_id, findUser, findChatroom, messageText, messageDateTime);
-            }
-            resultSet.close();
-            if (findMessage != null)
-                return Optional.of(findMessage);
+            if (!resultSet.next())
+                return Optional.empty();
+            Long userId = resultSet.getLong(2);
+            Long chatroomId = resultSet.getLong(3);
+            User user = findUser(userId);
+            Chatroom chatroom = findChatroom(chatroomId);
+            return Optional.of(new Message(resultSet.getLong(1), user, chatroom,
+                    resultSet.getString(4), resultSet.getTimestamp("date_time").toLocalDateTime()));
         } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            throwables.getMessage();
         }
         return Optional.empty();
+    }
+
+    private User findUser(Long id) throws SQLException {
+        String uQuery = "SELECT * FROM chat.messages WHERE id = " + id;
+
+        try (Connection con = dataSource.getConnection();
+             Statement st = con.createStatement()) {
+            ResultSet rs = st.executeQuery(uQuery);
+            if (!rs.next()) {
+                return null;
+            }
+            return new User(id, rs.getString(2), rs.getString(3));
+        }
+    }
+
+    private Chatroom findChatroom(Long id) throws SQLException {
+        String cQuery = "SELECT * FROM chat.users_chatrooms WHERE id = " + id;
+
+        try (Connection con = dataSource.getConnection();
+             Statement st = con.createStatement()) {
+            ResultSet rs = st.executeQuery(cQuery);
+            if (!rs.next()) {
+                return null;
+            }
+            return new Chatroom(id, rs.getString(2));
+        }
     }
 }

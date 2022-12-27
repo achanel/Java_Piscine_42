@@ -15,7 +15,7 @@ public class Program {
     public static void main(String[] args) throws SQLException {
         try {
             HikariConfig hikariConfig = new HikariConfig();
-            hikariConfig.setJdbcUrl("jdbc:postgresql://localhost:5555/postgres");
+            hikariConfig.setJdbcUrl("jdbc:postgresql://localhost:5432/postgres");
             hikariConfig.setUsername("postgres");
             hikariConfig.setPassword("postgres");
             HikariDataSource hikariDataSource = new HikariDataSource(hikariConfig);

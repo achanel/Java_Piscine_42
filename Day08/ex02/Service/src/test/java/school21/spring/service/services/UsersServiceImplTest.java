@@ -34,16 +34,16 @@ public class UsersServiceImplTest {
 
     @Test
     public void aLLMethodsTest() {
-        assertEquals(usersRepository.findByEmail("roman3binel@gmail.com"), Optional.of(usersRepository.findById(1l)));
+        assertEquals(usersRepository.findByEmail("achanel3@gmail.com"), Optional.of(usersRepository.findById(2l)));
         List<User> listAll = new ArrayList();
-            listAll.add(new User(0l, "romanbinel@gmail.com", "32411234"));
-            listAll.add(new User(1l, "roman3binel@gmail.com", "324112343"));
-            listAll.add(new User(2l, "romanbeinel@gmail.com", "324f11234"));
-            listAll.add(new User(3l, "roma2nbinel@gmail.com", "3241d1234"));
+            listAll.add(new User(0l, "achanel@gmail.com", "123"));
+            listAll.add(new User(1l, "achanel2@gmail.com", "qwe"));
+            listAll.add(new User(2l, "achanel3@gmail.com", "asd"));
+            listAll.add(new User(3l, "achanel4@gmail.com", "zxc"));
         assertEquals(usersRepository.findAll(), listAll);
 
         usersRepository.delete(0l);
-        Assertions.assertThrows(NullPointerException.class ,() -> usersRepository.findByEmail("romanbinel@gmail.com"));
+        Assertions.assertThrows(NullPointerException.class ,() -> usersRepository.findByEmail("achanel@gmail.com"));
         usersRepository.save(new User(null, "save@gmail.com", "3241d123dd4"));
         assertNotNull(usersRepository.findByEmail("save@gmail.com"));
         User user = usersRepository.findByEmail("save@gmail.com").get();

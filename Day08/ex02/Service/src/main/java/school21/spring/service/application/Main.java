@@ -16,6 +16,6 @@ public class Main {
         UsersRepository usersRepository  = context.getBean("usersRepositoryJdbcImpl", UsersRepository.class);
         UsersService usersService = context.getBean("usersServiceImpl", UsersService.class);
         System.out.println(usersRepository.findAll());
-        System.out.println(usersService.signUp("romankajdhfdhasd"));
+        System.out.println(usersService.signUp("achanel123asd"));
     }
 }

@@ -4,11 +4,11 @@ import edu.school21.reflection.orm.User;
 import edu.school21.reflection.orm.OrmManager;
 public class Program {
     public static void main(String[] args) {
-        OrmManager ormManager = new OrmManager("gtaggana", "edu.school21.reflection.orm");
+        OrmManager ormManager = new OrmManager("postgres", "edu.school21.reflection.orm");
 
-        User usr1 = new User("qwerty", "qaz", 10);
-        User usr2 = new User("asdfg", "plmko", 10);
-        User usr3 = new User("zxcvb", "ygvbhuhb", 66);
+        User usr1 = new User("Oleg", "Frolov", 10);
+        User usr2 = new User("Ivan", "Ivanov", 12);
+        User usr3 = new User("Petr", "Petrov", 66);
 
         System.out.println("_________________________CREATED_USERS______________________________");
         System.out.println(usr1);
@@ -21,10 +21,10 @@ public class Program {
         System.out.println(usr1);
         System.out.println(usr2);
         System.out.println(usr3);
-        System.out.println("_______________________UPDATE_INFORN_ABOUT_USER_____________________");
+        System.out.println("_______________________UPDATE_INFORM_ABOUT_USER_____________________");
 
 
-        usr1.setFirstName("0123456789");
+        usr1.setFirstName("XXXXXXXXXX");
         usr2.setAge(null);
         usr3.setLastName(null);
         ormManager.update(usr1);

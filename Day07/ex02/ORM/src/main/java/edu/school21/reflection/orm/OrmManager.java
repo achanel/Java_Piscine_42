@@ -11,7 +11,7 @@ import java.sql.Statement;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class OrmManager {
+public class OrmManager implements Manager{
     private HikariDataSource dataSource;
     private String schema;
 
@@ -42,7 +42,7 @@ public class OrmManager {
         HikariConfig cfg = new HikariConfig();
         cfg.setJdbcUrl("jdbc:postgresql://localhost:5432/postgres");
         cfg.setUsername("postgres");
-        cfg.setPassword("qwerty");
+        cfg.setPassword("postgres");
         dataSource = new HikariDataSource(cfg);
         exeUpdateQuery("drop schema if exists " + schema + " cascade;", null);
         exeUpdateQuery("create schema if not exists " + schema + ";", null);

@@ -1,14 +1,16 @@
-DROP TABLE IF EXISTS users;
+drop schema if exists chat cascade;
 
-CREATE TABLE IF NOT EXISTS users
-(
-    id SERIAL PRIMARY KEY,
-    username    VARCHAR NOT NULL,
-    password    VARCHAR
+create schema if not exists chat;
+
+create table if not exists chat.users (
+    id bigserial primary key,
+    username text unique not null,
+    password text not null
 );
-DROP TABLE IF EXISTS messages;
 
-CREATE TABLE IF NOT EXISTS messages
-(
-    message VARCHAR
+create table if not exists chat.messages (
+    id bigserial primary key,
+    author_id bigint not null references chat.users (id),
+    text text not null,
+    creation_time timestamp not null
 );

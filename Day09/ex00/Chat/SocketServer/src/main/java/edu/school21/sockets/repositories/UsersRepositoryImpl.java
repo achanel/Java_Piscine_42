@@ -66,14 +66,4 @@ public class UsersRepositoryImpl implements UsersRepository {
             jdbcTemplate.update("DELETE FROM chat.users WHERE id=?", id);
         }
     }
-
-    @Override
-    public User findByUserName(String userName) {
-        if (userName == null) {
-            return null;
-        } else {
-            return jdbcTemplate.query("SELECT * FROM chat.users WHERE username=?", USER_ROW_MAPPER,
-                    userName).stream().findFirst().orElse(null);
-        }
-    }
 }

@@ -1,0 +1,10 @@
+edu/school/tanks/app/Program.class
+edu/school/tanks/repositories/CrudRepository.class
+edu/school/tanks/config/ApplicationConfig.class
+edu/school/tanks/service/GamerService.class
+edu/school/tanks/server/Server$Client.class
+edu/school/tanks/repositories/GamerRepository.class
+edu/school/tanks/models/Gamer.class
+edu/school/tanks/repositories/GamerRepositoryImpl.class
+edu/school/tanks/server/Server.class
+edu/school/tanks/service/GamerServiceImpl.class
